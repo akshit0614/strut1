@@ -12,12 +12,14 @@
         <title>JSP Page</title>
     </head>
     <body>
+    <center>
         <form action="del.do" method="post">
-        <h1>Example of the insert data using structs application</h1>
-        eid<input type="number" name="eid" ><br>
+        <h1>Example of the Delete data using structs application</h1>
+        Emp ID<input type="number" name="eid" ><br>
        
         <br><input type="submit" value="delete"><br>
         <h2><%out.println(request.getAttribute("msg"));%></h2>
          </form>
+    </center>
     </body>
 </html>

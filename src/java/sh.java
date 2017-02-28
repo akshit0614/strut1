@@ -38,35 +38,52 @@ public class sh extends org.apache.struts.action.Action {
     public ActionForward execute(ActionMapping mapping, ActionForm form,
             HttpServletRequest request, HttpServletResponse response)
             throws Exception {
-        NewStrutsActionForm obj=(NewStrutsActionForm)form;
-        
-        int eid,b_sal;
-        String fname,lname;
-        eid=obj.getEid();
-        b_sal=obj.getB_sal();
-        fname=obj.getFname();
-        lname=obj.getLname();
-        try
-        {
-         Class.forName("com.mysql.jdbc.Driver");
-         Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/struts","root","");
-            Statement st=con.createStatement();
-     
-         
-         if(eid !=0)
-         {
-             ResultSet rs=st.executeQuery("select * from emp");
-                 while(rs.next())
-                 {
-                  request.setAttribute("msg", "Successfully Deleted");
-                  return mapping.findForward("ok");
-                 }
-         }
-        }catch(Exception e)
-        {
-         request.setAttribute("errmsg", e.getMessage());
-         return mapping.findForward("Wrong");
+        int id,bsal;
+        String fname,lname,s1,s2;
+        PreparedStatement preparedStatement;
+        ResultSet rs;
+        int count = 0;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/struts","root","");
+            Statement st = con.createStatement();
+            String sql = "select * from emp";
+            preparedStatement = con.prepareStatement(sql);
+            rs = preparedStatement.executeQuery();
+            String forward = "<table>\n" +
+            "<tr>\n" +
+            "<th class='id'>Id</th>\n" +
+            "<th class='name'>First name</th>\n" +
+            "<th class='rollno'>Last name</th>\n" +
+            "<th class='course'>Basic salary</th>\n" +
+            "</tr>";
+            while(rs.next()) {
+                id = rs.getInt("e_id"); 
+                fname = rs.getString("fname"); 
+                lname = rs.getString("lname"); 
+                bsal = rs.getInt("b_sal"); 
+                s1=Integer.toString(id);
+                s2=Integer.toString(bsal);
+                count++;
+                forward += "<tr align=center>\n" +
+                "<td>"+s1+"</td>\n" +
+                "<td>"+fname+"</td>\n" +
+                "<td>"+lname+"</td>\n" +
+                "<td>"+s2+"</td>\n" +
+                "</tr>";
+            }
+            forward += "</table>";
+            if(count > 0) {
+                request.setAttribute("test", rs);
+                request.setAttribute("msg", forward);
+                return mapping.findForward("ok");
+            } else {
+                request.setAttribute("msg", "Fail to Update");
+                return mapping.findForward("Wrong");
+            }
+        } catch (Exception e) {
+            request.setAttribute("errmsg",e.getMessage());
+            return mapping.findForward("Wrong");
         }
-        return mapping.findForward(SUCCESS);
     }
 }

@@ -35,6 +35,7 @@
         <action input="/show.jsp" name="NewStrutsActionForm" path="/sh" scope="session" type="sh">
             <forward name="ok" path="/show.jsp"/>
             <forward name="Wrong" path="/error.jsp"/>
+            
         </action>
      
     </action-mappings>
